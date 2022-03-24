@@ -1,10 +1,10 @@
-module SpcSpectra
+module SPCSpectra
 
 using Dates
 
-export Spc
+export SPC
 
-mutable struct Spc
+mutable struct SPC
     data::Vector{NTuple{2, Vector{<:Number}}}
     xlabel::String
     ylabel::String
@@ -120,7 +120,7 @@ read_data(io::IO, TT::Union{NTuple{N, DataType} where N, Vector{DataType}}) = lt
 # CONSTRUCTOR
 # ------------------------------------------------------------------------
 
-function Spc(filename::AbstractString)
+function SPC(filename::AbstractString)
     content = read(filename)
     io = IOBuffer(content)
 
@@ -272,7 +272,7 @@ function Spc(filename::AbstractString)
             isempty(s) || (labels[i] = s)
         end
     end
-    Spc(sub, labels..., get(fexper_op, fexper + 1, "Unknown"), timestamp, param_dict, params)
+    SPC(sub, labels..., get(fexper_op, fexper + 1, "Unknown"), timestamp, param_dict, params)
 end
 
 """
