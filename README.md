@@ -14,7 +14,7 @@ Pkg.add("https://github.com/hhaensel/SPCSpectra")
 ```
 or
 ```julia
-]add https://github.com/hhaensel/SPCSpectra"
+]add https://github.com/hhaensel/SPCSpectra
 ```
 
 ## Usage
@@ -22,11 +22,14 @@ or
 ```julia
 using SPCSpectra
 
-spc = SPC(filename)
+
+datadir = joinpath(dirname(dirname(pathof(SPCSpectra))), "test", "data")
+filenames = filter(endswith(r"\.spc"i), readdir(datadir, join = true))
+
+spc = SPC(filenames[1])
 
 # Plotting
 using PlotlyBase
-
 plotspc(spc::SPC) = Plot([scatter(x = s[1], y = s[2]) for s in spc.data])
 
 plotspc(spc)
