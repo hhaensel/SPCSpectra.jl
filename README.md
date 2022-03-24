@@ -19,16 +19,15 @@ or
 
 ## Usage
 
-PlotlySave reexports PlotlyBase so it is sufficient to do
 ```julia
 using SPCSpectra
 
 spc = SPC(filename)
 
-## Plotting
+# Plotting
 using PlotlyBase
-plotspc(data) = Plot([scatter(x = s[1], y = s[2]) for s in data])
-plotspc(spc::SPC) = plotspc(spc.data)
+
+plotspc(spc::SPC) = Plot([scatter(x = s[1], y = s[2]) for s in spc.data])
 
 plotspc(spc)
 ```
