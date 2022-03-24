@@ -24,5 +24,12 @@ PlotlySave reexports PlotlyBase so it is sufficient to do
 using SPCSpectra
 
 spc = SPC(filename)
+
+## Plotting
+using PlotlyBase
+plotspc(data) = Plot([scatter(x = s[1], y = s[2]) for s in data])
+plotspc(spc::SPC) = plotspc(spc.data)
+
+plotspc(spc)
 ```
 
