@@ -107,7 +107,7 @@ const fexper_op = ["General SPC",
                     "Raman Spectrum",
                     "Fluorescence Spectrum",
                     "Atomic Spectrum",
-                    "Chromatography Diode Array Spectra"]                    
+                    "Chromatography Diode Array Spectra"]
 
 flag_bits(n) = BitVector(digits(n, base = 2, pad = 8 * sizeof(n)))
 
@@ -214,7 +214,7 @@ function SPC(filename::AbstractString)
             ssfposn, ssfsize, ssftime = read_data(io, (Int32, Int32, Float32))
             # add sufile, load defaults for npts and exp
             pos = position(io)
-            seek(io, ssfposn + 1)
+            seek(io, ssfposn) # io buffer position is zero-based!
             xloc, y = subFile(io, 0, 0, true, tsprec, tmulti)
             seek(io, pos)
             push!(sub, (isnothing(xloc) ? x : xloc, y))
