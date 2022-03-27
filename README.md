@@ -4,6 +4,8 @@ A module for working with .SPC files in Julia. SPC is a binary data format to st
 
 The SPC file format can store either single or multiple y-values, and the x-values can either be given explicitly or even spaced x-values can be generated based on initial and final points as well as number of points. In addition the format can store various log data and parameters, as well as various information such as axis labels and scan type.
 
+NOTE: This file is still in beta state and has not been fully tested.
+
 ## Acknowledgement
 This package is highly inspired the python package [`spc` by rohanisaac](https://github.com/rohanisaac/spc).
 
