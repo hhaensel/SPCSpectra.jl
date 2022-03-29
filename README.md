@@ -31,8 +31,8 @@ pkg> add SPCSpectra
 ```julia
 using SPCSpectra
 
-datadir = joinpath(pkgdir(SPCSpectra)), "test", "data")
-filenames = filter(endswith(r"\.spc"i), readdir(datadir, join = true))
+datadir = joinpath(pkgdir(SPCSpectra), "test", "data")
+filenames = filter(endswith(r"\.spc"i), readdir(datadir; join=true))
 
 spc = SPC(filenames[1])
 
