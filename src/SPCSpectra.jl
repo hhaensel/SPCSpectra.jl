@@ -23,9 +23,7 @@ end
 subhead_siz = 32
 log_siz = 64
 
-# --------------------------
-# units for x,z,w axes
-# --------------------------
+"Units for x,z,w axes."
 const fxtype_op = ["Arbitrary",
                     "Wavenumber (cm-1)",
                     "Micrometers (um)",
@@ -57,10 +55,7 @@ const fxtype_op = ["Arbitrary",
                     "Millimeters (mm)",
                     "Hours"]
 
-# --------------------------
-# units y-axis
-# --------------------------
-
+"Units y-axis."
 const fytype_op = ["Arbitrary Intensity",
                     "Interferogram",
                     "Absorbance",
@@ -116,10 +111,11 @@ read_data(io::IO, ::Type{String}, n::Integer) = strip(String(read(io, n)), '\0')
 read_data(io::IO, T::DataType, n::Integer...) = ltoh.(reshape(reinterpret(T, read(io, prod(n) * sizeof(T))), Int64.(n)...))
 read_data(io::IO, TT::Union{NTuple{N, DataType} where N, Vector{DataType}}) = ltoh.(read.(Ref(io), TT))
 
-# ------------------------------------------------------------------------
-# CONSTRUCTOR
-# ------------------------------------------------------------------------
+"""
+    SPC(filename::AbstractString)
 
+Construct SPC objects.
+"""
 function SPC(filename::AbstractString)
     content = read(filename)
     io = IOBuffer(content)
@@ -200,7 +196,7 @@ function SPC(filename::AbstractString)
             read_data(io, Float32, fnpts)
         else
             # otherwise generate them
-            range(ffirst, flast, length = fnpts) |> collect
+            range(ffirst, flast; length=fnpts) |> collect
         end
     end
     # make a list of subfiles
@@ -276,13 +272,14 @@ function SPC(filename::AbstractString)
 end
 
 """
-Processes each subfile passed to it, extracts header information and data
+    subFile(io::IO, fnpts, fexp, txyxy, tsprec, tmulti)
+
+Process each subfile passed to it, extracts header information and data
 information and places them in data members
 Data
-----
-x: x-data (optional)
-y: y-data
-y_int: integer y-data if y-data is not floating
+- x: x-data (optional)
+- y: y-data
+- y_int: integer y-data if y-data is not floating
 """
 function subFile(io::IO, fnpts, fexp, txyxy, tsprec, tmulti)
     # extract subheader info
@@ -329,22 +326,24 @@ function subFile(io::IO, fnpts, fexp, txyxy, tsprec, tmulti)
     x, y
 end
 
+"""
+    read_subheader(io::IO)
+
+Return the subheader as a list:
+-------
+10 item list with the following data members:
+    [1] subflgs
+    [2] subexp
+    [3] subindx
+    [4] subtime
+    [5] subnext
+    [6] subnois
+    [7] subnpts
+    [8] subscan
+    [9] subwlevel
+    [10] subresv
+"""
 function read_subheader(io::IO)
-    """
-    Return the subheader as a list:
-    -------
-    10 item list with the following data members:
-        [1] subflgs
-        [2] subexp
-        [3] subindx
-        [4] subtime
-        [5] subnext
-        [6] subnois
-        [7] subnpts
-        [8] subscan
-        [9] subwlevel
-        [10] subresv
-    """
     subflgs = read_data(io, UInt8)
     subexp = read_data(io, UInt8)
     subindx = read_data(io, Int16)
@@ -359,4 +358,4 @@ function read_subheader(io::IO)
     subflgs, subexp, subindx, subtime, subnext, subnois, subnpts, subscan, subwlevel, subresv
 end
 
-end
+end # module
