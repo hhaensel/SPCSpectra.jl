@@ -277,10 +277,9 @@ end
 Process each subfile passed to it, extracts header information and data
 information and places them in data members
 Data
-----
-x: x-data (optional)
-y: y-data
-y_int: integer y-data if y-data is not floating
+- x: x-data (optional)
+- y: y-data
+- y_int: integer y-data if y-data is not floating
 """
 function subFile(io::IO, fnpts, fexp, txyxy, tsprec, tmulti)
     # extract subheader info
