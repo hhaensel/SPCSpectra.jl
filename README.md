@@ -24,7 +24,7 @@ Currently only file version `0x4b` is supported. Data output is not yet implemen
 julia> ]
 
 pkg> add SPCSpectra
-
+```
 
 ## Usage
 
