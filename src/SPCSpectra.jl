@@ -196,7 +196,7 @@ function SPC(filename::AbstractString)
             read_data(io, Float32, fnpts)
         else
             # otherwise generate them
-            range(ffirst, flast, length = fnpts) |> collect
+            range(ffirst, flast; length=fnpts) |> collect
         end
     end
     # make a list of subfiles

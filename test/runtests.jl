@@ -2,8 +2,7 @@ using Test
 using SPCSpectra
 
 @testset "SPCSpectra" begin
-    pkg_dir = dirname(dirname(pathof(SPCSpectra)))
-    dir = joinpath(pkg_dir, "test", "data")
+    dir = joinpath(pkgdir(SPCSpectra), "test", "data")
     filename = "4d_map.spc"
     path = joinpath(dir, filename)
     spc = SPC(path)
