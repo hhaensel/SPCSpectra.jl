@@ -14,6 +14,7 @@ This package is highly inspired the python package [`spc` by rohanisaac](https:/
 1. Extracts header information
 2. Store x and y data of all traces into a vector `data`. Single traces can be addressed by `spc.data[1]` (, `spc.data[2]`, `spc.data[3]`, ...)
 3. Attempts to interpret x-, y-, and z-labels, as well as experiment type
+4. Store z values of multifiles into a vector `zdata`
 
 Currently only file version `0x4b` is supported. Data output is not yet implemented.
 

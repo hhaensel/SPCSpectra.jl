@@ -5,7 +5,8 @@ using Dates
 export SPC
 
 mutable struct SPC
-    data::Vector{NTuple{2, Vector{<:Number}}}
+    data::Vector{Tuple{Vector{<:Number}, Vector{Float32}}} # xdata can be Float64 if calculated from range specs
+    zdata::Vector{Float32}
     xlabel::String
     ylabel::String
     zlabel::String
@@ -200,7 +201,9 @@ function SPC(filename::AbstractString)
         end
     end
     # make a list of subfiles
-    sub = []
+    xydata = []
+    zdata = Float32[]
+    z0 = dz = 0f0
 
     # if subfile directory is given
     if dat_fmt == "-xy" && fnpts > 0
@@ -211,15 +214,25 @@ function SPC(filename::AbstractString)
             # add sufile, load defaults for npts and exp
             pos = position(io)
             seek(io, ssfposn) # io buffer position is zero-based!
-            xloc, y = subFile(io, 0, 0, true, tsprec, tmulti)
+            xloc, y, z, zinc = subFile(io, 0, 0, true, tsprec, tmulti)
+            if i == 1
+                z0 = z
+                dz = zinc
+            end
             seek(io, pos)
-            push!(sub, (isnothing(xloc) ? x : xloc, y))
+            push!(xydata, (isnothing(xloc) ? x : xloc, y))
+            push!(zdata, z)
         end
     else
         # don't have directory, for each subfile
         for i in 1:fnsub
-            xloc, y = subFile(io, fnpts, fexp, txyxys, tsprec, tmulti)
-            push!(sub, (isnothing(xloc) ? x : xloc, y))
+            xloc, y, z, zinc = subFile(io, fnpts, fexp, txyxys, tsprec, tmulti)
+            if i == 1
+                z0 = z
+                dz = zinc
+            end
+            push!(xydata, (isnothing(xloc) ? x : xloc, y))
+            push!(zdata, z)
         end
     end
     # if log data exists
@@ -268,7 +281,12 @@ function SPC(filename::AbstractString)
             isempty(s) || (labels[i] = s)
         end
     end
-    SPC(sub, labels..., get(fexper_op, fexper + 1, "Unknown"), timestamp, param_dict, params)
+
+    if (0x10 & ftflg == 0x0)
+        fzinc > 0 && (dz == fzinc)
+        zdata = z0 .+ collect(0:dz:((fnpts - 1) * dz))
+    end
+    SPC(xydata, zdata, labels..., get(fexper_op, fexper + 1, "Unknown"), timestamp, param_dict, params)
 end
 
 """
@@ -323,7 +341,10 @@ function subFile(io::IO, fnpts, fexp, txyxy, tsprec, tmulti)
             (2.0f0^(exp - 32)) .* y_raw
         end
     end
-    x, y
+
+    z = subtime
+    zinc = subnext - subtime
+    x, y, z, zinc
 end
 
 """
