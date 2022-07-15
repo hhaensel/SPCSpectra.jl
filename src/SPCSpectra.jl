@@ -283,8 +283,8 @@ function SPC(filename::AbstractString)
     end
 
     if (0x10 & ftflg == 0x0)
-        fzinc > 0 && (dz == fzinc)
-        zdata = z0 .+ collect(0:dz:((fnpts - 1) * dz))
+        fzinc > 0 && (dz = fzinc)
+        zdata = dz == 0 ? [z0] : z0 .+ collect(0:dz:((fnpts - 1) * dz))
     end
     SPC(xydata, zdata, labels..., get(fexper_op, fexper + 1, "Unknown"), timestamp, param_dict, params)
 end
